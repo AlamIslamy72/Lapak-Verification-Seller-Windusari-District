@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\EnsureMfaVerified;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,7 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Daftarkan alias middleware
         $middleware->alias([
-            'role' => CheckRole::class,   // ← tambahkan baris ini
+            'role' => CheckRole::class,
+            'mfa' => EnsureMfaVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
