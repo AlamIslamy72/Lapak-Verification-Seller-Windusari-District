@@ -11,18 +11,16 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified', 'mfa'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Route setup & konfirmasi MFA (tidak perlu middleware 'mfa' karena ini proses setup-nya sendiri)
     Route::get('/mfa/setup', [MfaController::class, 'setup'])->name('mfa.setup');
     Route::post('/mfa/confirm', [MfaController::class, 'confirm'])->name('mfa.confirm');
 
-    // Route verifikasi MFA saat login
     Route::get('/mfa/verify', [MfaController::class, 'showVerifyForm'])->name('mfa.verify');
     Route::post('/mfa/verify', [MfaController::class, 'verify'])->name('mfa.verify.submit');
 
