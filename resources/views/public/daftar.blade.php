@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar UMKM - Lapak Windusari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -35,6 +36,10 @@
             <div>
                 <label class="block text-sm font-medium mb-1">Alamat Lengkap</label>
                 <textarea name="address" required class="w-full border-gray-300 rounded-md">{{ old('address') }}</textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-1">Email (opsional, untuk notifikasi status)</label>
+                <input type="email" name="email" value="{{ old('email') }}" class="w-full border-gray-300 rounded-md">
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Desa</label>

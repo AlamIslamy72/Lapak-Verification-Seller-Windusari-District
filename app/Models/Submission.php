@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Submission extends Model
 {
     protected $fillable = [
-        'registration_number', 'full_name', 'nik', 'kk_number', 'address',
+        'registration_number', 'full_name', 'nik', 'kk_number', 'address', 'email',
         'village_id', 'product_name', 'product_description', 'product_photo_url',
         'nib_url', 'category', 'status', 'village_notes', 'district_notes',
         'survey_photo_url', 'rejection_reason', 'visited',

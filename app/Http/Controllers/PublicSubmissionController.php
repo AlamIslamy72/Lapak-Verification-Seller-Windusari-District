@@ -21,6 +21,7 @@ class PublicSubmissionController extends Controller
             'nik' => 'required|regex:/^[0-9]{16}$/',
             'kk_number' => 'required|regex:/^[0-9]{16}$/',
             'address' => 'required|string',
+            'email' => 'nullable|email',
             'village_id' => 'required|exists:villages,id',
             'product_name' => 'required|string|max:255',
             'product_description' => 'nullable|string',

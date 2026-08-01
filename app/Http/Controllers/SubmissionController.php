@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SubmissionStatusChanged;
 
 class SubmissionController extends Controller
 {
@@ -84,6 +86,10 @@ class SubmissionController extends Controller
             'verified_by_village_id' => $request->user()->id,
         ]);
 
+        if ($submission->email) {
+            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+        }
+
         return back()->with('status', 'Submission diverifikasi desa, diteruskan ke kecamatan.');
     }
 
@@ -99,6 +105,10 @@ class SubmissionController extends Controller
             'verified_by_village_id' => $request->user()->id,
         ]);
 
+        if ($submission->email) {
+            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+        }
+
         return back()->with('status', 'Submission ditolak oleh desa.');
     }
 
@@ -108,6 +118,10 @@ class SubmissionController extends Controller
             'status' => 'approved',
             'verified_by_district_id' => $request->user()->id,
         ]);
+
+        if ($submission->email) {
+            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+        }
 
         return back()->with('status', 'Submission disetujui final oleh kecamatan.');
     }
@@ -121,6 +135,10 @@ class SubmissionController extends Controller
             'rejection_reason' => $request->rejection_reason,
             'verified_by_district_id' => $request->user()->id,
         ]);
+
+        if ($submission->email) {
+            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+        }
 
         return back()->with('status', 'Submission ditolak oleh kecamatan.');
     }
