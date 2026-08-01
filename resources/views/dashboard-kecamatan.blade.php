@@ -35,6 +35,18 @@
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-semibold">Daftar Pengajuan</h3>
                     <div class="flex gap-2">
+                        <a href="{{ route('export.pdf') }}" class="bg-red-600 text-white px-3 py-1 rounded-md text-xs">Export PDF</a>
+                        <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('export.pdf') }}" class="bg-red-600 text-white px-3 py-1 rounded-md text-xs">Export PDF</a>
+                        <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="{{ route('export.pdf') }}" class="bg-red-600 text-white px-3 py-1 rounded-md text-xs">Export PDF</a>
+                        <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
+                    </div>
+                    <div class="flex gap-2">
                         @foreach (['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'rejected' => 'Ditolak'] as $key => $label)
                             <a href="?filter={{ $key }}"
                                 class="px-3 py-1 rounded-md text-xs font-medium {{ $filter === $key ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600' }}">

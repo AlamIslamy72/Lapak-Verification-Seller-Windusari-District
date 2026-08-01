@@ -76,3 +76,9 @@ Route::middleware(['auth', 'role:admin_kecamatan', 'mfa'])->prefix('admin')->nam
     Route::delete('/users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
     Route::post('/users/{user}/reset-password', [UserManagementController::class, 'resetPassword'])->name('users.reset-password');
 });
+
+use App\Http\Controllers\DashboardController as DC;
+Route::middleware(['auth', 'mfa'])->group(function () {
+    Route::get('/export/pdf', [DC::class, 'exportPdf'])->name('export.pdf');
+    Route::get('/export/csv', [DC::class, 'exportCsv'])->name('export.csv');
+});

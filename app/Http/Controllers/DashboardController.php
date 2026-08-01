@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Submission;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class DashboardController extends Controller
 {
@@ -71,5 +72,66 @@ class DashboardController extends Controller
     public function shared(Request $request)
     {
         return view('dashboard-shared', ['user' => $request->user()]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $user = $request->user();
+        $query = Submission::latest();
+
+        if ($user->isAdminDesa()) {
+            $query->where('village_id', $user->village_id);
+        }
+
+        $submissions = $query->get();
+        $title = $user->isAdminDesa() ? 'Laporan Desa ' . $user->village->name : 'Laporan Kecamatan Windusari';
+
+        $pdf = Pdf::loadView('exports.submissions-pdf', [
+            'submissions' => $submissions,
+            'title' => $title,
+        ]);
+
+        return $pdf->download('laporan-umkm-' . now()->format('Y-m-d') . '.pdf');
+    }
+
+    public function exportCsv(Request $request)
+    {
+        $user = $request->user();
+        $query = Submission::latest();
+
+        if ($user->isAdminDesa()) {
+            $query->where('village_id', $user->village_id);
+        }
+
+        $submissions = $query->get();
+
+        $filename = 'laporan-umkm-' . now()->format('Y-m-d') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $callback = function () use ($submissions) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['No. Registrasi', 'Nama', 'NIK', 'Desa', 'Produk', 'Kategori', 'Status', 'Dikunjungi', 'Tanggal Daftar']);
+
+            foreach ($submissions as $s) {
+                fputcsv($file, [
+                    $s->registration_number,
+                    $s->full_name,
+                    $s->nik,
+                    $s->village->name,
+                    $s->product_name,
+                    $s->category,
+                    $s->status,
+                    $s->visited ? 'Ya' : 'Tidak',
+                    $s->created_at->format('Y-m-d'),
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }
