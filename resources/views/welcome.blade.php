@@ -2,6 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @include("partials.pwa-head")
     <title>Lapak Windusari - Verifikasi UMKM Kecamatan Windusari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
