@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <title>Lapak Windusari - Verifikasi UMKM Kecamatan Windusari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="bg-gray-50 min-h-screen flex items-center justify-center">
     <div class="max-w-lg w-full text-center px-6">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Lapak Windusari</h1>
@@ -22,10 +24,11 @@
                 Cek Status Pengajuan
             </a>
             <a href="{{ route('login') }}"
-                class="text-gray-500 hover:underline text-sm mt-4">
+                class="bg-white border border-gray-300 text-gray-800 py-4 rounded-lg font-medium hover:bg-gray-50">
                 Login Petugas Desa / Kecamatan
             </a>
         </div>
     </div>
 </body>
+
 </html>
