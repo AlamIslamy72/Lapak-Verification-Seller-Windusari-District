@@ -40,7 +40,7 @@
                         placeholder="123456" autofocus>
 
                     <button type="submit"
-                        class="bg-gray-800 text-white px-4 py-2 rounded-md hover:bg-gray-700">
+                        class="bg-teal-700 text-white px-4 py-2 rounded-md hover:bg-teal-800">
                         Aktifkan MFA
                     </button>
                 </form>

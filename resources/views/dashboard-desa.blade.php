@@ -49,7 +49,7 @@
                     <div class="flex gap-2">
                         @foreach (['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'rejected' => 'Ditolak'] as $key => $label)
                             <a href="?filter={{ $key }}"
-                                class="px-3 py-1 rounded-md text-xs font-medium {{ $filter === $key ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600' }}">
+                                class="px-3 py-1 rounded-md text-xs font-medium {{ $filter === $key ? 'bg-teal-700 text-white' : 'bg-gray-100 text-gray-600' }}">
                                 {{ $label }}
                             </a>
                         @endforeach

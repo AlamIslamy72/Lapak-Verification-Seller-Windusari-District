@@ -16,7 +16,7 @@
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="font-semibold">Daftar Akun Petugas</h3>
-                    <a href="{{ route('admin.users.create') }}" class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm">+ Tambah Akun</a>
+                    <a href="{{ route('admin.users.create') }}" class="bg-teal-700 text-white px-4 py-2 rounded-md text-sm">+ Tambah Akun</a>
                 </div>
 
                 <table class="min-w-full text-sm text-left">

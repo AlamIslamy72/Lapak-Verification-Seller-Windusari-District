@@ -8,7 +8,7 @@
     <title>Status Pengajuan</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 min-h-screen py-10">
+<body class="bg-gray-50 min-h-screen py-10">
     <div class="max-w-md mx-auto bg-white shadow-sm rounded-lg p-8">
         <h1 class="text-xl font-bold mb-1">{{ $submission->full_name }}</h1>
         <p class="text-sm text-gray-500 mb-4">{{ $submission->registration_number }} · {{ $submission->product_name }}</p>
@@ -21,7 +21,7 @@
                 'rejected_by_village' => ['Ditolak oleh Desa', 'bg-red-100 text-red-800'],
                 'rejected_by_district' => ['Ditolak oleh Kecamatan', 'bg-red-100 text-red-800'],
             ];
-            [$label, $color] = $statusLabels[$submission->status] ?? ['-', 'bg-gray-100'];
+            [$label, $color] = $statusLabels[$submission->status] ?? ['-', 'bg-gray-50'];
         @endphp
 
         <span class="{{ $color }} px-3 py-1 rounded-full text-sm font-semibold inline-block mb-4">{{ $label }}</span>

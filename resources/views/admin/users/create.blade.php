@@ -38,7 +38,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="w-full bg-gray-800 text-white py-2 rounded-md font-medium">Simpan</button>
+                    <button type="submit" class="w-full bg-teal-700 text-white py-2 rounded-md font-medium">Simpan</button>
                 </form>
                 <a href="{{ route('admin.users.index') }}" class="text-sm text-blue-600 hover:underline mt-4 inline-block">← Kembali</a>
             </div>

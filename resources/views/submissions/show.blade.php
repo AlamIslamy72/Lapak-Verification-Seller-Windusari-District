@@ -74,7 +74,7 @@
                             <option value="{{ $cat }}" @selected($submission->category === $cat)>{{ $cat }}</option>
                         @endforeach
                     </select>
-                    <button class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm">Simpan</button>
+                    <button class="bg-teal-700 text-white px-4 py-2 rounded-md text-sm">Simpan</button>
                 </form>
             </div>
 
@@ -88,7 +88,7 @@
                 <form method="POST" action="{{ route('submissions.survey-photo', $submission) }}" enctype="multipart/form-data" class="flex gap-2">
                     @csrf
                     <input type="file" name="survey_photo" class="flex-1 text-sm">
-                    <button class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm">Upload</button>
+                    <button class="bg-teal-700 text-white px-4 py-2 rounded-md text-sm">Upload</button>
                 </form>
             </div>
 
@@ -98,7 +98,7 @@
                 <form method="POST" action="{{ route('submissions.village-notes', $submission) }}">
                     @csrf
                     <textarea name="village_notes" rows="2" class="w-full border-gray-300 rounded-md mb-2">{{ $submission->village_notes }}</textarea>
-                    <button class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm">Simpan Catatan</button>
+                    <button class="bg-teal-700 text-white px-4 py-2 rounded-md text-sm">Simpan Catatan</button>
                 </form>
             </div>
 
@@ -108,7 +108,7 @@
                     <form method="POST" action="{{ route('submissions.district-notes', $submission) }}">
                         @csrf
                         <textarea name="district_notes" rows="2" class="w-full border-gray-300 rounded-md mb-2">{{ $submission->district_notes }}</textarea>
-                        <button class="bg-gray-800 text-white px-4 py-2 rounded-md text-sm">Simpan Catatan</button>
+                        <button class="bg-teal-700 text-white px-4 py-2 rounded-md text-sm">Simpan Catatan</button>
                     </form>
                 </div>
             @endif

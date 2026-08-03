@@ -8,7 +8,7 @@
     <title>Cek Status Pengajuan</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
     <div class="max-w-md w-full bg-white shadow-sm rounded-lg p-8">
         <h1 class="text-xl font-bold mb-4">Cek Status Pengajuan</h1>
 
@@ -26,7 +26,7 @@
                 <label class="block text-sm font-medium mb-1">NIK</label>
                 <input type="text" name="nik" maxlength="16" required class="w-full border-gray-300 rounded-md">
             </div>
-            <button class="w-full bg-gray-800 text-white py-2 rounded-md font-medium">Cek Status</button>
+            <button class="w-full bg-teal-700 text-white py-2 rounded-md font-medium">Cek Status</button>
         </form>
     </div>
 </body>

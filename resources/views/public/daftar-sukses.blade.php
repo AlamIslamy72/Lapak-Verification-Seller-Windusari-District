@@ -8,11 +8,11 @@
     <title>Pendaftaran Berhasil</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-50 min-h-screen flex items-center justify-center">
     <div class="max-w-md bg-white shadow-sm rounded-lg p-8 text-center">
         <h1 class="text-2xl font-bold text-green-600 mb-2">Pendaftaran Berhasil!</h1>
         <p class="text-gray-600 mb-4">Simpan data berikut untuk mengecek status pengajuan Anda.</p>
-        <div class="bg-gray-100 rounded-lg p-4 mb-4 text-left space-y-2">
+        <div class="bg-gray-50 rounded-lg p-4 mb-4 text-left space-y-2">
             <div>
                 <p class="text-xs text-gray-500">Nomor Registrasi</p>
                 <p class="text-xl font-bold font-mono">{{ $submission->registration_number }}</p>

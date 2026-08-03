@@ -8,7 +8,7 @@
     <title>Daftar UMKM - Lapak Windusari</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100 min-h-screen py-10">
+<body class="bg-gray-50 min-h-screen py-10">
     <div class="max-w-2xl mx-auto bg-white shadow-sm rounded-lg p-8">
         <h1 class="text-2xl font-bold mb-1">Pendaftaran Verifikasi UMKM</h1>
         <p class="text-gray-500 mb-6">Kecamatan Windusari</p>
@@ -68,7 +68,7 @@
                 <label class="block text-sm font-medium mb-1">Upload NIB (opsional)</label>
                 <input type="file" name="nib_file" class="w-full text-sm">
             </div>
-            <button type="submit" class="w-full bg-gray-800 text-white py-2 rounded-md font-medium">Daftar Sekarang</button>
+            <button type="submit" class="w-full bg-teal-700 text-white py-2 rounded-md font-medium">Daftar Sekarang</button>
         </form>
 
         <p class="text-center text-sm mt-4">
