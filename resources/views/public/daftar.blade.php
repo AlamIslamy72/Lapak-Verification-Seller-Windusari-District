@@ -77,3 +77,15 @@
     </div>
 </body>
 </html>
+
+@if(session('error'))
+<div id="modalDuplikat" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
+    <div style="background:#fff;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+        <p style="font-size:18px;font-weight:600;color:#111;margin-bottom:24px;">
+            {{ session('error') }}
+        </p>
+        <button onclick="window.location.href='/'" style="background:#0f766e;color:#fff;border:none;padding:10px 32px;border-radius:8px;font-size:16px;cursor:pointer;">
+            OK
+        </button>
+    </div>
+</div>
