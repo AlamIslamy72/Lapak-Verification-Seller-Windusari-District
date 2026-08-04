@@ -79,67 +79,70 @@ class SubmissionController extends Controller
 
     public function approveVillage(Request $request, Submission $submission)
     {
-        $this->authorizeAccess($request, $submission);
+    $this->authorizeAccess($request, $submission);
+    abort_unless($request->user()->isAdminDesa(), 403, 'Hanya admin desa yang berwenang.');
+    abort_unless($submission->status === 'pending', 422, 'Submission sudah tidak dalam tahap menunggu verifikasi desa.');
 
-        $submission->update([
-            'status' => 'verified_village',
-            'verified_by_village_id' => $request->user()->id,
-        ]);
+    $submission->update([
+        'status' => 'verified_village',
+        'verified_by_village_id' => $request->user()->id,
+    ]);
 
-        if ($submission->email) {
-            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
-        }
-
-        return back()->with('status', 'Submission diverifikasi desa, diteruskan ke kecamatan.');
+    if ($submission->email) {
+        Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+    }
+    return back()->with('status', 'Submission diverifikasi desa, diteruskan ke kecamatan.');
     }
 
     public function rejectVillage(Request $request, Submission $submission)
     {
-        $this->authorizeAccess($request, $submission);
+    $this->authorizeAccess($request, $submission);
+    abort_unless($request->user()->isAdminDesa(), 403, 'Hanya admin desa yang berwenang.');
+    abort_unless($submission->status === 'pending', 422, 'Submission sudah tidak dalam tahap menunggu verifikasi desa.');
 
-        $request->validate(['rejection_reason' => 'required|string']);
+    $request->validate(['rejection_reason' => 'required|string']);
+    $submission->update([
+        'status' => 'rejected_by_village',
+        'rejection_reason' => $request->rejection_reason,
+        'verified_by_village_id' => $request->user()->id,
+    ]);
 
-        $submission->update([
-            'status' => 'rejected_by_village',
-            'rejection_reason' => $request->rejection_reason,
-            'verified_by_village_id' => $request->user()->id,
-        ]);
-
-        if ($submission->email) {
-            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
-        }
-
-        return back()->with('status', 'Submission ditolak oleh desa.');
+    if ($submission->email) {
+        Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+    }
+    return back()->with('status', 'Submission ditolak oleh desa.');
     }
 
     public function approveDistrict(Request $request, Submission $submission)
     {
-        $submission->update([
-            'status' => 'approved',
-            'verified_by_district_id' => $request->user()->id,
-        ]);
+    abort_unless($request->user()->isAdminKecamatan(), 403, 'Hanya admin kecamatan yang berwenang.');
+    abort_unless($submission->status === 'verified_village', 422, 'Submission belum diverifikasi desa.');
 
-        if ($submission->email) {
-            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
-        }
+    $submission->update([
+        'status' => 'approved',
+        'verified_by_district_id' => $request->user()->id,
+    ]);
 
-        return back()->with('status', 'Submission disetujui final oleh kecamatan.');
+    if ($submission->email) {
+        Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
+    }
+    return back()->with('status', 'Submission disetujui final oleh kecamatan.');
     }
 
     public function rejectDistrict(Request $request, Submission $submission)
     {
-        $request->validate(['rejection_reason' => 'required|string']);
+    abort_unless($request->user()->isAdminKecamatan(), 403, 'Hanya admin kecamatan yang berwenang.');
+    abort_unless($submission->status === 'verified_village', 422, 'Submission belum diverifikasi desa.');
 
-        $submission->update([
-            'status' => 'rejected_by_district',
-            'rejection_reason' => $request->rejection_reason,
-            'verified_by_district_id' => $request->user()->id,
-        ]);
+    $request->validate(['rejection_reason' => 'required|string']);
+    $submission->update([
+        'status' => 'rejected_by_district',
+        'rejection_reason' => $request->rejection_reason,
+        'verified_by_district_id' => $request->user()->id,
+    ]);
 
-        if ($submission->email) {
-            Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
-        }
-
-        return back()->with('status', 'Submission ditolak oleh kecamatan.');
+    if ($submission->email) {
+        Mail::to($submission->email)->send(new SubmissionStatusChanged($submission));
     }
+    return back()->with('status', 'Submission ditolak oleh kecamatan.');
 }
