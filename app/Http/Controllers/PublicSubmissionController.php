@@ -1,10 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Submission;
 use App\Models\Village;
+use Illuminate\Support\Str;
 
 class PublicSubmissionController extends Controller
 {
@@ -32,6 +31,18 @@ class PublicSubmissionController extends Controller
             'kk_number.regex' => 'Nomor KK harus berupa 16 digit angka.',
         ]);
 
+        $productNameNormalized = Str::lower(trim($validated['product_name']));
+
+        $duplikat = Submission::where('nik', $validated['nik'])
+            ->whereRaw('LOWER(TRIM(product_name)) = ?', [$productNameNormalized])
+            ->exists();
+
+        if ($duplikat) {
+            return back()
+                ->withInput()
+                ->with('error', 'Pendaftaran dengan produk ini atas NIK yang sama sudah pernah dilakukan.');
+        }
+
         $validated['registration_number'] = Submission::generateRegistrationNumber();
         $validated['status'] = 'pending';
 
@@ -43,7 +54,6 @@ class PublicSubmissionController extends Controller
         }
 
         $submission = Submission::create($validated);
-
         return redirect()->route('public.daftar.success', $submission->registration_number);
     }
 

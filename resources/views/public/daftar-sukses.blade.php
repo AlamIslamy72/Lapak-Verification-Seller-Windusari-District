@@ -29,3 +29,10 @@
     </div>
 </body>
 </html>
+
+<script>
+  history.replaceState(null, '', window.location.href);
+  window.addEventListener('popstate', function () {
+    window.location.href = "/";
+  });
+</script>
