@@ -7,7 +7,7 @@ use App\Models\Submission;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubmissionStatusChanged;
-use App\Services\CloudinaryService
+use App\Services\CloudinaryService;
 
 class SubmissionController extends Controller
 {
