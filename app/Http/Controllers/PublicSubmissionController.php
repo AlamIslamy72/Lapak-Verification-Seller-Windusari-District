@@ -1,9 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Submission;
 use App\Models\Village;
+use App\Services\CloudinaryService;
 use Illuminate\Support\Str;
+
 
 class PublicSubmissionController extends Controller
 {
@@ -13,7 +17,7 @@ class PublicSubmissionController extends Controller
         return view('public.daftar', ['villages' => $villages]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CloudinaryService $cloudinary)
     {
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -31,29 +35,18 @@ class PublicSubmissionController extends Controller
             'kk_number.regex' => 'Nomor KK harus berupa 16 digit angka.',
         ]);
 
-        $productNameNormalized = Str::lower(trim($validated['product_name']));
-
-        $duplikat = Submission::where('nik', $validated['nik'])
-            ->whereRaw('LOWER(TRIM(product_name)) = ?', [$productNameNormalized])
-            ->exists();
-
-        if ($duplikat) {
-            return back()
-                ->withInput()
-                ->with('error', 'Pendaftaran dengan produk ini atas NIK yang sama sudah pernah dilakukan.');
-        }
-
         $validated['registration_number'] = Submission::generateRegistrationNumber();
         $validated['status'] = 'pending';
 
         if ($request->hasFile('product_photo')) {
-            $validated['product_photo_url'] = $request->file('product_photo')->store('product-photos', 'public');
+            $validated['product_photo_url'] = $cloudinary->upload($request->file('product_photo'), 'product-photos');
         }
         if ($request->hasFile('nib_file')) {
-            $validated['nib_url'] = $request->file('nib_file')->store('nib-files', 'public');
+            $validated['nib_url'] = $cloudinary->upload($request->file('nib_file'), 'nib-files');
         }
 
         $submission = Submission::create($validated);
+
         return redirect()->route('public.daftar.success', $submission->registration_number);
     }
 

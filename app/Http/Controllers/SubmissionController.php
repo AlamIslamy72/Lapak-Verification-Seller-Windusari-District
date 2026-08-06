@@ -7,6 +7,7 @@ use App\Models\Submission;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SubmissionStatusChanged;
+use App\Services\CloudinaryService
 
 class SubmissionController extends Controller
 {
@@ -39,13 +40,13 @@ class SubmissionController extends Controller
         return back()->with('status', 'Kategori berhasil disimpan.');
     }
 
-    public function uploadSurveyPhoto(Request $request, Submission $submission)
+    public function uploadSurveyPhoto(Request $request, Submission $submission, CloudinaryService $cloudinary)
     {
         $this->authorizeAccess($request, $submission);
 
         $request->validate(['survey_photo' => 'required|image|max:4096']);
 
-        $path = $request->file('survey_photo')->store('survey-photos', 'public');
+        $path = $cloudinary->upload($request->file('survey_photo'), 'survey-photos');
 
         $submission->update([
             'survey_photo_url' => $path,
