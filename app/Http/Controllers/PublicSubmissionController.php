@@ -14,7 +14,12 @@ class PublicSubmissionController extends Controller
     public function create()
     {
         $villages = Village::orderBy('name')->get();
-        return view('public.daftar', ['villages' => $villages]);
+
+        // Cegah browser menampilkan form basi (yang sudah terisi) saat user klik tombol Back
+        return response()
+            ->view('public.daftar', ['villages' => $villages])
+            ->header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+            ->header('Pragma', 'no-cache');
     }
 
     public function store(Request $request, CloudinaryService $cloudinary)
@@ -34,6 +39,20 @@ class PublicSubmissionController extends Controller
             'nik.regex' => 'NIK harus berupa 16 digit angka.',
             'kk_number.regex' => 'Nomor KK harus berupa 16 digit angka.',
         ]);
+
+        // Cegah data ganda: kalau NIK + nama produk yang sama baru saja didaftarkan
+        // (misalnya karena user klik Back lalu submit ulang), jangan buat submission baru.
+        // Cukup arahkan ke nomor registrasi yang sudah ada.
+        $recentDuplicate = Submission::where('nik', $validated['nik'])
+            ->where('product_name', $validated['product_name'])
+            ->where('created_at', '>=', now()->subMinutes(5))
+            ->first();
+
+        if ($recentDuplicate) {
+            return redirect()
+                ->route('public.daftar.success', $recentDuplicate->registration_number)
+                ->with('info', 'Anda sudah mendaftarkan produk ini sebelumnya. Berikut nomor registrasi Anda.');
+        }
 
         $validated['registration_number'] = Submission::generateRegistrationNumber();
         $validated['status'] = 'pending';
