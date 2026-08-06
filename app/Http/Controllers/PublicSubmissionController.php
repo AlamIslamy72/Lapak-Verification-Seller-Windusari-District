@@ -7,6 +7,7 @@ use App\Models\Submission;
 use App\Models\Village;
 use App\Services\CloudinaryService;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 
 class PublicSubmissionController extends Controller
@@ -40,18 +41,19 @@ class PublicSubmissionController extends Controller
             'kk_number.regex' => 'Nomor KK harus berupa 16 digit angka.',
         ]);
 
-        // Cegah data ganda: kalau NIK + nama produk yang sama baru saja didaftarkan
-        // (misalnya karena user klik Back lalu submit ulang), jangan buat submission baru.
-        // Cukup arahkan ke nomor registrasi yang sudah ada.
-        $recentDuplicate = Submission::where('nik', $validated['nik'])
+        // Tolak tegas kalau NIK + nama produk yang sama sudah pernah didaftarkan
+        // sebelumnya (dan belum ditolak). Ini mencegah data ganda akibat submit
+        // ulang (klik Back lalu Kirim lagi, double-click, dsb) dengan pesan error
+        // yang jelas ke pengguna, bukan diam-diam redirect ke data lama.
+        $duplicate = Submission::where('nik', $validated['nik'])
             ->where('product_name', $validated['product_name'])
-            ->where('created_at', '>=', now()->subMinutes(5))
+            ->whereNotIn('status', ['rejected_by_village', 'rejected_by_district'])
             ->first();
 
-        if ($recentDuplicate) {
-            return redirect()
-                ->route('public.daftar.success', $recentDuplicate->registration_number)
-                ->with('info', 'Anda sudah mendaftarkan produk ini sebelumnya. Berikut nomor registrasi Anda.');
+        if ($duplicate) {
+            throw ValidationException::withMessages([
+                'nik' => "Produk \"{$validated['product_name']}\" dengan NIK ini sudah pernah didaftarkan sebelumnya (No. Registrasi: {$duplicate->registration_number}, status: {$duplicate->status}). Silakan cek status pendaftaran Anda, atau gunakan NIK/nama produk lain jika ini pendaftaran yang berbeda.",
+            ])->redirectTo(url()->previous());
         }
 
         $validated['registration_number'] = Submission::generateRegistrationNumber();
@@ -64,7 +66,19 @@ class PublicSubmissionController extends Controller
             $validated['nib_url'] = $cloudinary->upload($request->file('nib_file'), 'nib-files');
         }
 
-        $submission = Submission::create($validated);
+        // Jaring pengaman terakhir di level database: kalau dua request submit
+        // benar-benar bersamaan (race condition) lolos dari pengecekan di atas,
+        // constraint unique di database akan menolak salah satunya di sini.
+        try {
+            $submission = Submission::create($validated);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ((int) $e->getCode() === 23000) {
+                throw ValidationException::withMessages([
+                    'nik' => 'Produk ini dengan NIK yang sama baru saja terdaftar. Silakan cek status pendaftaran Anda.',
+                ])->redirectTo(url()->previous());
+            }
+            throw $e;
+        }
 
         return redirect()->route('public.daftar.success', $submission->registration_number);
     }
