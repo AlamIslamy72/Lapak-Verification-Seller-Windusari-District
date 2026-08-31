@@ -19,7 +19,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('public.daftar.store') }}" enctype="multipart/form-data" class="space-y-4">
+        <form method="POST" action="{{ route('public.daftar.store') }}" enctype="multipart/form-data" class="space-y-4" id="daftar-form">
             @csrf
             <div>
                 <label class="block text-sm font-medium mb-1">Nama Lengkap</label>
@@ -68,8 +68,18 @@
                 <label class="block text-sm font-medium mb-1">Upload NIB (opsional)</label>
                 <input type="file" name="nib_file" class="w-full text-sm">
             </div>
-            <button type="submit" class="w-full bg-teal-700 text-white py-2 rounded-md font-medium">Daftar Sekarang</button>
+            <button type="submit" id="daftar-submit-btn" class="w-full bg-teal-700 text-white py-2 rounded-md font-medium">Daftar Sekarang</button>
         </form>
+
+        <script>
+            // Cegah klik ganda / double-tap mengirim form dua kali sekaligus.
+            document.getElementById('daftar-form').addEventListener('submit', function () {
+                var btn = document.getElementById('daftar-submit-btn');
+                btn.disabled = true;
+                btn.textContent = 'Mengirim...';
+                // form tetap lanjut submit normal, cuma tombolnya dikunci
+            });
+        </script>
 
         <p class="text-center text-sm mt-4">
             <a href="{{ route('public.lacak') }}" class="text-blue-600 hover:underline">Sudah daftar? Cek status di sini</a>
