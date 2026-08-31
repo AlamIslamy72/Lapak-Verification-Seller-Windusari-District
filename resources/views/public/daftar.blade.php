@@ -13,6 +13,7 @@
         <h1 class="text-2xl font-bold mb-1">Pendaftaran Verifikasi UMKM</h1>
         <p class="text-gray-500 mb-6">Kecamatan Windusari</p>
 
+        {{-- Kotak error biasa tetap ada, sebagai cadangan kalau JS dimatikan --}}
         @if ($errors->any())
             <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
                 <ul>@foreach ($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul>
@@ -88,14 +89,28 @@
 </body>
 </html>
 
-@if(session('error'))
+{{--
+    Modal gelembung notifikasi. Sebelumnya modal ini menunggu session('error'),
+    padahal tidak ada satupun kode yang pernah mengisi session('error') itu —
+    jadi modal ini sebenarnya tidak pernah muncul. Sekarang dihubungkan ke
+    $errors (termasuk pesan "sudah terdaftar sebelumnya" dari duplicate check),
+    supaya benar-benar muncul saat pendaftaran ditolak.
+--}}
+@if ($errors->any())
 <div id="modalDuplikat" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:9999;">
     <div style="background:#fff;border-radius:12px;padding:32px;max-width:400px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.2);">
-        <p style="font-size:18px;font-weight:600;color:#111;margin-bottom:24px;">
-            {{ session('error') }}
+        <p style="font-size:32px;margin-bottom:8px;">⚠️</p>
+        <p style="font-size:18px;font-weight:700;color:#b91c1c;margin-bottom:12px;">
+            Pendaftaran Ditolak
         </p>
-        <button onclick="window.location.href='/'" style="background:#0f766e;color:#fff;border:none;padding:10px 32px;border-radius:8px;font-size:16px;cursor:pointer;">
-            OK
+        <p style="font-size:15px;color:#374151;margin-bottom:24px;line-height:1.5;">
+            @foreach ($errors->all() as $e)
+                {{ $e }}@if(!$loop->last)<br><br>@endif
+            @endforeach
+        </p>
+        <button onclick="document.getElementById('modalDuplikat').style.display='none'"
+                style="background:#0f766e;color:#fff;border:none;padding:10px 32px;border-radius:8px;font-size:16px;cursor:pointer;">
+            Mengerti, saya akan periksa
         </button>
     </div>
 </div>
