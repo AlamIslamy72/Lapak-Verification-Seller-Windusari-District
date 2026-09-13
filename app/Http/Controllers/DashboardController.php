@@ -44,7 +44,7 @@ class DashboardController extends Controller
     {
         $filter = $request->get('filter', 'all');
 
-        $query = Submission::latest();
+        $query = Submission::with('village')->latest();
 
         match ($filter) {
             'pending' => $query->whereIn('status', ['pending', 'verified_village']),

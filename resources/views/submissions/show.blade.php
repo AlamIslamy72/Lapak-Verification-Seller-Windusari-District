@@ -11,6 +11,9 @@
             @if (session('status'))
             <div class="p-4 bg-green-100 text-green-700 rounded">{{ session('status') }}</div>
             @endif
+            @if (session('info'))
+            <div class="p-4 bg-blue-100 text-blue-700 rounded">{{ session('info') }}</div>
+            @endif
             @if ($errors->any())
             <div class="p-4 bg-red-100 text-red-700 rounded">{{ $errors->first() }}</div>
             @endif
@@ -40,6 +43,15 @@
                 <div class="mb-4">
                     <p class="text-xs text-gray-500">Alamat</p>
                     <p class="font-medium">{{ $submission->address }}</p>
+                </div>
+                <div class="mb-4">
+                    <p class="text-xs text-gray-500">Nomor WhatsApp</p>
+                    <p class="font-medium">
+                        {{ $submission->whatsapp_number ?? '-' }}
+                        @if ($submission->whatsapp_number)
+                            <a href="{{ $submission->whatsapp_link }}" target="_blank" class="text-green-600 text-sm underline ml-2">Chat WA</a>
+                        @endif
+                    </p>
                 </div>
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>

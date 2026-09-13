@@ -39,14 +39,6 @@
                         <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
                     </div>
                     <div class="flex gap-2">
-                        <a href="{{ route('export.pdf') }}" class="bg-red-600 text-white px-3 py-1 rounded-md text-xs">Export PDF</a>
-                        <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="{{ route('export.pdf') }}" class="bg-red-600 text-white px-3 py-1 rounded-md text-xs">Export PDF</a>
-                        <a href="{{ route('export.csv') }}" class="bg-green-600 text-white px-3 py-1 rounded-md text-xs">Export Excel</a>
-                    </div>
-                    <div class="flex gap-2">
                         @foreach (['all' => 'Semua', 'pending' => 'Menunggu', 'approved' => 'Disetujui', 'rejected' => 'Ditolak'] as $key => $label)
                             <a href="?filter={{ $key }}"
                                 class="px-3 py-1 rounded-md text-xs font-medium {{ $filter === $key ? 'bg-teal-700 text-white' : 'bg-gray-100 text-gray-600' }}">
@@ -61,6 +53,7 @@
                         <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
                             <tr>
                                 <th class="px-4 py-2">Nama Penjual</th>
+                                <th class="px-4 py-2">Desa</th>
                                 <th class="px-4 py-2">Produk</th>
                                 <th class="px-4 py-2">Kategori</th>
                                 <th class="px-4 py-2">Status</th>
@@ -71,18 +64,20 @@
                             @forelse ($submissions as $submission)
                                 <tr>
                                     <td class="px-4 py-2 font-medium">{{ $submission->full_name }}</td>
+                                    <td class="px-4 py-2">{{ $submission->village->name ?? '-' }}</td>
                                     <td class="px-4 py-2">{{ $submission->product_name }}</td>
                                     <td class="px-4 py-2">
                                         <span class="bg-gray-100 px-2 py-1 rounded text-xs">{{ $submission->category ?? '-' }}</span>
                                     </td>
                                     <td class="px-4 py-2">
                                         @php
+                                            $desaNama = $submission->village->name ?? 'desa tidak diketahui';
                                             $statusLabels = [
-                                                'pending' => ['Menunggu Verifikasi Desa', 'bg-yellow-100 text-yellow-800'],
+                                                'pending' => ["Menunggu Verifikasi Desa {$desaNama}", 'bg-yellow-100 text-yellow-800'],
                                                 'verified_village' => ['Menunggu Verifikasi Kecamatan', 'bg-blue-100 text-blue-800'],
                                                 'verified_district' => ['Diverifikasi Kecamatan', 'bg-blue-100 text-blue-800'],
                                                 'approved' => ['Disetujui', 'bg-green-100 text-green-800'],
-                                                'rejected_by_village' => ['Ditolak Desa', 'bg-red-100 text-red-800'],
+                                                'rejected_by_village' => ["Ditolak Desa {$desaNama}", 'bg-red-100 text-red-800'],
                                                 'rejected_by_district' => ['Ditolak Kecamatan', 'bg-red-100 text-red-800'],
                                             ];
                                             [$label, $color] = $statusLabels[$submission->status] ?? ['-', 'bg-gray-100'];
@@ -94,7 +89,7 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr><td colspan="5" class="px-4 py-4 text-center text-gray-400">Belum ada pengajuan.</td></tr>
+                                <tr><td colspan="6" class="px-4 py-4 text-center text-gray-400">Belum ada pengajuan.</td></tr>
                             @endforelse
                         </tbody>
                     </table>

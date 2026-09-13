@@ -45,6 +45,11 @@
                 <input type="email" name="email" value="{{ old('email') }}" class="w-full border-gray-300 rounded-md">
             </div>
             <div>
+                <label class="block text-sm font-medium mb-1">Nomor WhatsApp Aktif</label>
+                <input type="tel" name="whatsapp_number" value="{{ old('whatsapp_number') }}" placeholder="Contoh: 081234567890" required class="w-full border-gray-300 rounded-md">
+                <p class="text-xs text-gray-400 mt-1">Nomor ini akan ditampilkan di katalog produk supaya calon pembeli bisa menghubungi Anda langsung.</p>
+            </div>
+            <div>
                 <label class="block text-sm font-medium mb-1">Desa</label>
                 <select name="village_id" required class="w-full border-gray-300 rounded-md">
                     <option value="">-- Pilih Desa --</option>

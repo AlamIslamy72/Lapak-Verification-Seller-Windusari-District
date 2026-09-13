@@ -78,11 +78,29 @@ class SubmissionController extends Controller
         return back()->with('status', 'Catatan kecamatan berhasil disimpan.');
     }
 
+    /**
+     * Ubah nama status teknis jadi kalimat yang enak dibaca orang biasa.
+     */
+    protected function statusLabel(string $status): string
+    {
+        return match ($status) {
+            'pending' => 'menunggu verifikasi desa',
+            'verified_village' => 'sudah diverifikasi desa dan sedang menunggu persetujuan kecamatan',
+            'approved' => 'sudah disetujui final oleh kecamatan',
+            'rejected_by_village' => 'sudah ditolak oleh desa',
+            'rejected_by_district' => 'sudah ditolak oleh kecamatan',
+            default => 'dalam status "' . $status . '"',
+        };
+    }
+
     public function approveVillage(Request $request, Submission $submission)
     {
         $this->authorizeAccess($request, $submission);
         abort_unless($request->user()->isAdminDesa(), 403, 'Hanya admin desa yang berwenang.');
-        abort_unless($submission->status === 'pending', 422, 'Submission sudah tidak dalam tahap menunggu verifikasi desa.');
+
+        if ($submission->status !== 'pending') {
+            return back()->with('info', 'Pendaftaran ini ' . $this->statusLabel($submission->status) . ', jadi tidak bisa diverifikasi ulang.');
+        }
 
         $submission->update([
             'status' => 'verified_village',
@@ -99,7 +117,10 @@ class SubmissionController extends Controller
     {
         $this->authorizeAccess($request, $submission);
         abort_unless($request->user()->isAdminDesa(), 403, 'Hanya admin desa yang berwenang.');
-        abort_unless($submission->status === 'pending', 422, 'Submission sudah tidak dalam tahap menunggu verifikasi desa.');
+
+        if ($submission->status !== 'pending') {
+            return back()->with('info', 'Pendaftaran ini ' . $this->statusLabel($submission->status) . ', jadi tidak bisa diproses ulang.');
+        }
 
         $request->validate(['rejection_reason' => 'required|string']);
         $submission->update([
@@ -117,7 +138,10 @@ class SubmissionController extends Controller
     public function approveDistrict(Request $request, Submission $submission)
     {
         abort_unless($request->user()->isAdminKecamatan(), 403, 'Hanya admin kecamatan yang berwenang.');
-        abort_unless($submission->status === 'verified_village', 422, 'Submission belum diverifikasi desa.');
+
+        if ($submission->status !== 'verified_village') {
+            return back()->with('info', 'Pendaftaran ini ' . $this->statusLabel($submission->status) . ', jadi belum bisa disetujui kecamatan.');
+        }
 
         $submission->update([
             'status' => 'approved',
@@ -133,7 +157,10 @@ class SubmissionController extends Controller
     public function rejectDistrict(Request $request, Submission $submission)
     {
         abort_unless($request->user()->isAdminKecamatan(), 403, 'Hanya admin kecamatan yang berwenang.');
-        abort_unless($submission->status === 'verified_village', 422, 'Submission belum diverifikasi desa.');
+
+        if ($submission->status !== 'verified_village') {
+            return back()->with('info', 'Pendaftaran ini ' . $this->statusLabel($submission->status) . ', jadi belum bisa diproses kecamatan.');
+        }
 
         $request->validate(['rejection_reason' => 'required|string']);
         $submission->update([

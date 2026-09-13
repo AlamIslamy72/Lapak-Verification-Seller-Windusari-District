@@ -31,6 +31,7 @@ class PublicSubmissionController extends Controller
             'kk_number' => 'required|regex:/^[0-9]{16}$/',
             'address' => 'required|string',
             'email' => 'nullable|email',
+            'whatsapp_number' => 'required|regex:/^(\+62|62|0)[0-9]{8,13}$/',
             'village_id' => 'required|exists:villages,id',
             'product_name' => 'required|string|max:255',
             'product_description' => 'nullable|string',
@@ -39,6 +40,8 @@ class PublicSubmissionController extends Controller
         ], [
             'nik.regex' => 'NIK harus berupa 16 digit angka.',
             'kk_number.regex' => 'Nomor KK harus berupa 16 digit angka.',
+            'whatsapp_number.required' => 'Nomor WhatsApp wajib diisi, supaya calon pembeli bisa menghubungi Anda lewat katalog produk.',
+            'whatsapp_number.regex' => 'Format nomor WhatsApp tidak valid. Contoh: 081234567890 atau 6281234567890.',
         ]);
 
         // Tolak tegas kalau NIK + nama produk yang sama sudah pernah didaftarkan
