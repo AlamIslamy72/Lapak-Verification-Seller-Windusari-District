@@ -31,7 +31,7 @@ class PublicSubmissionController extends Controller
             'kk_number' => 'required|regex:/^[0-9]{16}$/',
             'address' => 'required|string',
             'email' => 'nullable|email',
-            'whatsapp_number' => 'required|regex:/^(\+62|62|0)[0-9]{8,13}$/',
+            'whatsapp_number' => ['required', 'regex:/^(\+62|62|0)[0-9]{8,13}$/'],
             'village_id' => 'required|exists:villages,id',
             'product_name' => 'required|string|max:255',
             'product_description' => 'nullable|string',
