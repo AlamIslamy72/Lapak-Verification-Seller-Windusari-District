@@ -63,7 +63,7 @@
                 <input type="text" name="product_name" value="{{ old('product_name') }}" required class="w-full border-gray-300 rounded-md">
             </div>
             <div>
-                <label class="block text-sm font-medium mb-1">Deskripsi Produk</label>
+                <label class="block text-sm font-medium mb-1">Deskripsi Produk & Harga Produk</label>
                 <textarea name="product_description" class="w-full border-gray-300 rounded-md">{{ old('product_description') }}</textarea>
             </div>
             <div>
